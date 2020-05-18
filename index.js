@@ -31,9 +31,22 @@ window.onload = function() {
     averageR = gen1 + gen2*2 + gen3*3 + gen4*4 + gen5*5;
     averageDif = Math.abs(averageTh - averageR) / averageTh * 100;
 
-    varianceTh = pr1 + pr2*4 + pr3*9 + pr4*16 + pr5*25 - averageTh*averageTh;
-    varianceR = Math.abs(gen1 + gen2*4 + gen3*9 + gen4*16 + gen5*25 - averageR*averageR);
+    varianceTh = pr1 + pr2*4 + pr3*9 + pr4*16 + pr5*25 - averageTh**2;
+    varianceR = Math.abs(gen1 + gen2*4 + gen3*9 + gen4*16 + gen5*25 - averageR**2);
     varianceDif = Math.abs(varianceTh - varianceR) / varianceTh * 100;
+
+    chiSqTh = Math.abs((pr1*num)**2/(num*gen1)
+              + (pr2*num)**2/(num*gen2)
+              + (pr3*num)**2/(num*gen3)
+              + (pr4*num)**2/(num*gen4)
+              + (pr5*num)**2/(num*gen5)
+              - num);
+    if (chiSqTh < 11.07) {
+      result = " < 11.07 (not rejected)"
+    }
+    else {
+      result = " > 11.07 (rejected)";
+    }
 
     data.addRows([
       ['1', gen1],
@@ -47,7 +60,7 @@ window.onload = function() {
     if (mode == 11) {
       title = title.concat('\nAverage: ', averageR.toFixed(2), ', error = ', averageDif.toFixed(0), '%'
                           ,'\nVariance: ', varianceR.toFixed(2), ', error = ', varianceDif.toFixed(0), '%'
-                          ,'\nChi-squared:')
+                          ,'\nChi-squared: ', chiSqTh.toFixed(2), result)
     }
 
     // Set chart options

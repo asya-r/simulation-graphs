@@ -11,32 +11,44 @@
   <form>
     <table>
       <tr>
-        <td> Prob 1 </td>
+        <td>Prob 1 </td>
         <td><input id="p1" type="number" step="0.01" required=true/></td>
       </tr>
       <tr>
-        <td> Prob 2 </td>
+        <td>Prob 2 </td>
         <td><input id="p2" type="number" step="0.01" required=true/></td>
       </tr>
       <tr>
-        <td> Prob 3 </td>
+        <td>Prob 3 </td>
         <td><input id="p3" type="number" step="0.01" required=true/></td>
       </tr>
       <tr>
-        <td> Prob 4 </td>
+        <td>Prob 4 </td>
         <td><input id="p4" type="number" step="0.01" required=true/></td>
       </tr>
       <tr>
-        <td> Prob 5 </td>
+        <td>Prob 5 </td>
         <td>Auto</td>
+        <td>First command intensity</td>
+        <td><input id="com1" type="number" required=true/></td>
       </tr>
       <tr>
-        <td> Number of experiments </td>
+        <td>Number of experiments </td>
         <td><input id="num" type="number" required=true/></td>
+        <td>Second command intensity</td>
+        <td><input id="com2" type="number" required=true/></td>
+      </tr>
+      <tr>
+        <td><button id="btn9" type="button">Start - 9 lab</button></td>
+        <td><button id="btn11" type="button">Start - 11 lab</button></td>
+        <td><button id="btn12" type="button">Start - 12 lab</button></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td><div id="match_div"></div>
       </tr>
     </table>
-    <button id="btn9" type="button">Start - 9 lab</button>
-    <button id="btn11" type="button">Start - 11 lab</button>
   </form>
   <div id="chart_div"></div>
 </body>

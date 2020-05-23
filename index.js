@@ -1,10 +1,16 @@
 window.onload = function() {
   document.getElementById("btn9").onclick = function() {execute(9)};
   document.getElementById("btn11").onclick = function() {execute(11)};
+  document.getElementById("btn12").onclick = function() {execute(12)};
   google.charts.load('current', {'packages':['corechart']});
-  
+
   function execute(mode) {
-    google.charts.setOnLoadCallback(drawChart(mode));
+    if (mode == 12) {
+      matchResult();
+    }
+    else {
+      google.charts.setOnLoadCallback(drawChart(mode));
+    }
   }
 
   function drawChart(mode) {
@@ -81,4 +87,22 @@ window.onload = function() {
     }
     return a / num;
   }
+};
+function goalsNum(intensity) {
+  var m = 0;
+  var s = 0;
+  while (!(s < -intensity)) {
+    var a = Math.random();
+    s += Math.log(a);
+    m += 1;
+  }
+  return m;
+};
+
+function matchResult() {
+  var intens1 = document.getElementById("com1").value;
+  var intens2 = document.getElementById("com2").value;
+  var res1 = goalsNum(intens1);
+  var res2 = goalsNum(intens2);
+  document.getElementById('match_div').innerHTML = '<br>Match result: ' + res1 + '/' + res2;
 };

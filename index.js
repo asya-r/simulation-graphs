@@ -2,11 +2,15 @@ window.onload = function() {
   document.getElementById("btn9").onclick = function() {execute(9)};
   document.getElementById("btn11").onclick = function() {execute(11)};
   document.getElementById("btn12").onclick = function() {execute(12)};
+  document.getElementById("btn13").onclick = function() {execute(13)};
   google.charts.load('current', {'packages':['corechart']});
 
   function execute(mode) {
     if (mode == 12) {
       matchResult();
+    }
+    else if (mode == 13) {
+      google.charts.setOnLoadCallback(drawAnotherChart())
     }
     else {
       google.charts.setOnLoadCallback(drawChart(mode));
@@ -14,7 +18,6 @@ window.onload = function() {
   }
 
   function drawChart(mode) {
-    // Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Exp');
     data.addColumn('number', 'Freq');
@@ -88,7 +91,7 @@ window.onload = function() {
     return a / num;
   }
 };
-function goalsNum(intensity) {
+function poisson(intensity) {
   var m = 0;
   var s = 0;
   while (!(s < -intensity)) {
@@ -102,7 +105,68 @@ function goalsNum(intensity) {
 function matchResult() {
   var intens1 = document.getElementById("com1").value;
   var intens2 = document.getElementById("com2").value;
-  var res1 = goalsNum(intens1);
-  var res2 = goalsNum(intens2);
-  document.getElementById('match_div').innerHTML = '<br>Match result: ' + res1 + '/' + res2;
+  var res1 = poisson(intens1);
+  var res2 = poisson(intens2);
+  document.getElementById('chart_div').innerHTML = '<br>Match result: ' + res1 + '/' + res2;
 };
+
+function drawAnotherChart() {
+  var intensity = document.getElementById("intensity").value;
+  var numExp = document.getElementById("numExp").value;
+  var values = [['', 'value']];
+  var pValues = [];
+  for (let i = 0; i < numExp; i++) {
+    let tmp = poisson(intensity);
+    values.push([i, tmp]);
+    pValues.push(tmp);
+  }
+  var data = google.visualization.arrayToDataTable(values);
+
+  var averageR = average(pValues);
+  var averageDif = Math.abs(intensity - averageR) / intensity * 100;
+
+  var varianceR = variance(pValues, averageR);
+  varianceDif = Math.abs(intensity - varianceR) / intensity * 100;
+
+  chiSqR = chiSq(pValues, intensity);
+  if (chiSqR < 11.07) {
+    result = " < 11.07 (not rejected)"
+  }
+  else {
+    result = " > 11.07 (rejected)";
+  }
+
+  title = 'Poisson distribution';
+  title = title.concat('\nAverage: ', averageR.toFixed(2), ', error = ', averageDif.toFixed(0), '%'
+                      ,'\nVariance: ', varianceR.toFixed(2), ', error = ', varianceDif.toFixed(0), '%'
+                      ,'\nChi-squared: ', chiSqR.toFixed(2), result)
+  var options = {
+    title: title,
+    curveType: 'function',
+    legend: { position: 'bottom' },
+    width:700,
+    height:500
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+  chart.draw(data, options);
+};
+
+function average(arr) {
+  const reducer = (acc, cur) => acc + cur;
+  return arr.reduce(reducer) / arr.length;
+};
+
+function variance(arr, aver) {
+  const reducer = (acc, cur) => acc + (cur - aver) ** 2;
+  return arr.reduce(reducer) / (arr.length - 1);
+};
+
+function chiSq(arr, intensity) {
+  chi = 0;
+  for (let i = 0; i < arr.length; i++) {
+    chi += i ** 2s / (arr.length * arr[i]);
+  }
+  return chi - arr.length;
+}

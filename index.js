@@ -1,11 +1,9 @@
 window.onload = function() {
   document.getElementById("btn9").onclick = function() {execute(9)};
   document.getElementById("btn11").onclick = function() {execute(11)};
-
+  google.charts.load('current', {'packages':['corechart']});
+  
   function execute(mode) {
-    // Load the Visualization API and the corechart package.
-    google.charts.load('current', {'packages':['corechart']});
-    // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart(mode));
   }
 

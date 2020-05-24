@@ -166,7 +166,7 @@ function variance(arr, aver) {
 function chiSq(arr, intensity) {
   chi = 0;
   for (let i = 0; i < arr.length; i++) {
-    chi += i ** 2s / (arr.length * arr[i]);
+    chi += i ** 2 / (arr.length * arr[i]);
   }
   return chi - arr.length;
 }

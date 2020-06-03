@@ -3,6 +3,7 @@ window.onload = function() {
   document.getElementById("btn11").onclick = function() {execute(11)};
   document.getElementById("btn12").onclick = function() {execute(12)};
   document.getElementById("btn13").onclick = function() {execute(13)};
+  document.getElementById("btn14").onclick = function() {execute(14)};
   google.charts.load('current', {'packages':['corechart']});
 
   function execute(mode) {
@@ -11,6 +12,9 @@ window.onload = function() {
     }
     else if (mode == 13) {
       google.charts.setOnLoadCallback(drawAnotherChart())
+    }
+    else if (mode == 14) {
+      google.charts.setOnLoadCallback(drawChartGauss())
     }
     else {
       google.charts.setOnLoadCallback(drawChart(mode));
@@ -170,3 +174,59 @@ function chiSq(arr, intensity) {
   }
   return chi - arr.length;
 }
+
+function drawChartGauss() {
+  var mean = parseFloat(document.getElementById("meanGauss").value);
+  var variance = parseFloat(document.getElementById("varianceGauss").value);
+  var num = document.getElementById("numExpGauss").value;
+  var mode = document.getElementById("modeGauss").value;
+  var stats = []
+  var t0 = performance.now()
+  for (let j = 0; j < num; j++){
+      stats.push(Number.parseFloat(randomGauss(mode, mean, variance)).toFixed(1));
+    }
+  var time = (performance.now() - t0) + "ms";
+  var newSt = [['', '']]
+  var minG = mean - 3;//Math.min.apply(Math, stats).toFixed(0);
+  var maxG = mean + 3;//Math.max.apply(Math, stats).toFixed(0);
+  for (let j = minG; j < maxG; j+=0.1){
+    var tmp = 0;
+    stats.forEach((item, i) => {
+      if (item == j.toFixed(1).toString()){
+        tmp += 1;
+      }
+    });
+    newSt.push([j, tmp]);
+    }
+  var data = google.visualization.arrayToDataTable(newSt);
+
+
+  var options = {
+    title: 'Normal distribution\n'+time,
+    legend: { position: 'none',
+    width:700,
+    height:500 },
+  };
+
+  var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+  chart.draw(data, options);
+      }
+
+function randomGauss(k, e, v){
+    var n = 12;
+    var g = 0;
+    if (k == 1){
+      for (let i = 0; i < n; i++){
+        g += Math.random();
+      }
+      g -= 6
+    }
+    if (k == 2){
+      for (let i = 0; i < n; i++){
+        g += Math.random();
+      }
+      g -= 6
+      g += (g ** 3 - 3 * g) / 240
+    }
+    return Math.sqrt(v) * g + e;
+  }
